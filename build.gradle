@@ -40,7 +40,7 @@ dependencies {
 	compileOnly('org.projectlombok:lombok')
 }
 
-
+// TODO config minimum; dependsOn test might be convenient
 jacocoTestReport {
     group = "Reporting"
     reports {
