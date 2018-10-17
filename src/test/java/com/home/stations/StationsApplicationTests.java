@@ -1,4 +1,4 @@
-package com.home.stations.stations;
+package com.home.stations;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

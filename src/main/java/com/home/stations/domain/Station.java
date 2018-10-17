@@ -1,4 +1,4 @@
-package com.home.stations.stations.domain;
+package com.home.stations.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

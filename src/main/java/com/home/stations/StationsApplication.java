@@ -1,4 +1,4 @@
-package com.home.stations.stations;
+package com.home.stations;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
