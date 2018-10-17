@@ -13,11 +13,11 @@ import org.springframework.context.annotation.Configuration;
 public class StationSearchConfig {
 
     @Autowired
-    private EntityManager bentityManager;
+    private EntityManager entityManager;
 
     @Bean
     StationSearchService stationSearchService() {
-        StationSearchService stationSearchService = new StationSearchService(bentityManager);
+        StationSearchService stationSearchService = new StationSearchService(entityManager);
         stationSearchService.initializeHibernateSearch();
         return stationSearchService;
     }
