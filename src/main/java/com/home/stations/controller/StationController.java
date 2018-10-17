@@ -39,7 +39,7 @@ public class StationController {
 
     @PutMapping("{id}")
     public Station update(@PathVariable long id, @RequestBody Station station) {
-        Station existing = stationRepository.getOne(id);
+        Station existing = stationRepository.findOne(id);
         existing.setStationId(station.getStationId());
         existing.setName(station.getName());
         existing.setHdEnabled(station.getHdEnabled());
