@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.IntStream;
-
-import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequestMapping("/station")
@@ -57,20 +54,22 @@ public class StationController {
     }
 
 
-    // Finders mappings
+    // Search mappings
 
-    @GetMapping("enabled")
-    public List<Station> showEnabled() {
-        return stationRepository.findByHdEnabled(true);
+
+    // /search/enabled
+    @GetMapping("enabled") // TODO implement
+    public List<Station> searchEnabled() {
+        List<Station> searchResults = Collections.emptyList();
+        searchResults = searchService.searchEnabled();
+        return searchResults;
     }
 
-
-    // Search mapping
-
-    // e.g. /search?stationId=777&name=xyz  ; not sure the best way; maybe post in an object key
-    @GetMapping("/search") // TODO implement
-    public List<Station> search(@RequestParam Map<String, String> searchQuery) {
+    // /search?term=nameValue|stationIdValue
+    @GetMapping("/search")
+    public List<Station> searchStationIdOrNameFuzzy(@RequestParam(name = "term") String searchTerm) {
         List<Station> searchResults = Collections.emptyList();
+        searchResults = searchService.searchStationIdOrNameFuzzy(searchTerm);
         return searchResults;
     }
 
@@ -85,7 +84,7 @@ public class StationController {
                     station.setName(String.format("Station %s", String.valueOf(i)));
                     station.setCallSign(String.format("Call Sign %s", String.valueOf(i)));
                     stationRepository.save(station);
-                    System.out.println(i + " => " + station);
+                    System.out.println(i + " => " + station.getStationId() + " : " + station.getHdEnabled());
                 }
         );
     }

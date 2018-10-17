@@ -26,6 +26,7 @@ public class Station implements Serializable {
     @Field
     private String name;
 
+    @Field
     private Boolean hdEnabled;
 
     private String callSign;

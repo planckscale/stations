@@ -1,13 +1,16 @@
 package com.home.stations.service;
 
 import com.home.stations.domain.Station;
+import org.apache.lucene.search.Query;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
+import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,8 +42,52 @@ public class StationSearchService {
     // search related stuff
 
     @Transactional(readOnly = true)
-    public List<Station> indexedSearch(String searchTerm) {
-        return Collections.emptyList();
+    // Search for HD-enabled
+    public List<Station> searchEnabled() {
+        // Setup the HibernateSearch EntityManager and QueryBuilder for Station entity
+        FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(centityManager);
+        QueryBuilder builder = fullTextEntityManager.getSearchFactory().buildQueryBuilder().forEntity(Station.class).get();
+
+        // Query to search for enabled strictly
+        Query luceneQuery = builder.keyword()
+                .onField("hdEnabled")
+                .matching("true").createQuery();
+
+        // Wrap lucene query for Station entity
+        javax.persistence.Query jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, Station.class);
+
+        // run search
+        List<Station> stations = Collections.emptyList();
+        try {
+            stations = jpaQuery.getResultList();
+        } catch (NoResultException nre) { }
+
+        return stations;
+    }
+
+
+    @Transactional(readOnly = true)
+    // Search for supplied term among the stationId or name fields (fuzzy could be configurable)
+    public List<Station> searchStationIdOrNameFuzzy(String searchTerm) {
+        // Setup the HibernateSearch EntityManager and QueryBuilder for Station entity
+        FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(centityManager);
+        QueryBuilder builder = fullTextEntityManager.getSearchFactory().buildQueryBuilder().forEntity(Station.class).get();
+
+        // Query to search for term in either the stationId field or name field
+        Query luceneQuery = builder.keyword().fuzzy().withEditDistanceUpTo(1)
+                .onFields("stationId", "name")
+                .matching(searchTerm).createQuery();
+
+        // Wrap lucene query for Station entity
+        javax.persistence.Query jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, Station.class);
+
+        // run search
+        List<Station> stations = Collections.emptyList();
+        try {
+            stations = jpaQuery.getResultList();
+        } catch (NoResultException nre) { }
+
+        return stations;
     }
 
 
