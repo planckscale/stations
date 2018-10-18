@@ -34,6 +34,7 @@ public class StationRepositoryIntegrationTest {
 
         List<Station> stations = dao.findAll();
         assertThat(stations.size() == 1);
+        assertThat(stations.get(0).getId() != null);
         assertThat(stations.get(0).getStationId().equals("abc123"));
     }
 
