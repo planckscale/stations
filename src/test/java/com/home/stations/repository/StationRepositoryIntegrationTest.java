@@ -101,9 +101,5 @@ public class StationRepositoryIntegrationTest {
         return station;
     }
 
-    private String toJson(Station station) throws JsonProcessingException {
-        System.out.print(new ObjectMapper().writeValueAsString(station));
-        return new ObjectMapper().writeValueAsString(station);
-    }
 }
 
