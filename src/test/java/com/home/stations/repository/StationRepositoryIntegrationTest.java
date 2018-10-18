@@ -69,9 +69,10 @@ public class StationRepositoryIntegrationTest {
         dao.save(station);
 
         // then
-        List<Station> stations = dao.findAll();
-        assertThat(stations.get(0).getId().longValue() == station.getId().longValue());
-        assertThat(stations.get(0).getStationId().equals(newStationId));
+        Station updated = dao.findOne(station.getId());
+        assertThat(updated.getId().longValue() == station.getId().longValue());
+        assertThat(!updated.getStationId().equals(station.getStationId()));
+        assertThat(updated.getStationId().equals(newStationId));
     }
 
     @Test
@@ -81,14 +82,11 @@ public class StationRepositoryIntegrationTest {
         dao.save(station);
 
         // when
-        String newStationId = randomAlphanumeric(5);
-        station.setStationId(newStationId);
-        dao.save(station);
+        dao.delete(station);
 
         // then
-        List<Station> stations = dao.findAll();
-        assertThat(stations.get(0).getId().longValue() == station.getId().longValue());
-        assertThat(stations.get(0).getStationId().equals(newStationId));
+        Station notFound = dao.findOne(station.getId());
+        assertThat(notFound == null);
     }
 
 
