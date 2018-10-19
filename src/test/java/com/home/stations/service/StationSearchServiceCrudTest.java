@@ -29,13 +29,7 @@ public class StationSearchServiceCrudTest {
     StationRepository repository;
 
     @Autowired
-    //@InjectMocks
     StationSearchService service;
-
-    private List<Station> stations;
-
-    @Before
-    public void setupTestData() { }
 
 
     @Test
