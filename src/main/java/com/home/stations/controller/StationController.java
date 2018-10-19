@@ -76,7 +76,6 @@ public class StationController {
                     station.setName(String.format("Station %s", String.valueOf(i)));
                     station.setCallSign(String.format("Call Sign %s", String.valueOf(i)));
                     searchService.create(station);
-                    System.out.println(i + " => " + station.getStationId() + " : " + station.getHdEnabled());
                 }
         );
     }

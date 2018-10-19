@@ -61,15 +61,4 @@ public class StationSearchServiceCrudTest {
         verify(repository, times(1)).delete(station.getId());
     }
 
-
-    private Station mockStation() {
-        Station station = Mockito.mock(Station.class);
-        station.setId(RandomUtils.nextLong()); // note exists after persisted only
-        station.setStationId(RandomStringUtils.randomAlphanumeric(5));
-        station.setHdEnabled(true);
-        station.setName(RandomStringUtils.randomAlphabetic(10));
-        station.setCallSign(RandomStringUtils.randomAlphabetic(10));
-        return station;
-    }
-
 }

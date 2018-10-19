@@ -34,13 +34,15 @@ public class StationSearchService {
         this.entityManager = entityManager;
     }
 
-    public void initializeHibernateSearch() {
+    public FullTextEntityManager initializeHibernateSearch() {
+        FullTextEntityManager fullTextEntityManager = null;
         try {
-            FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+            fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
             fullTextEntityManager.createIndexer().startAndWait();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        return fullTextEntityManager;
     }
 
     // search related stuff
@@ -48,6 +50,7 @@ public class StationSearchService {
     @Transactional(readOnly = true)
     // Search for HD-enabled
     public List<Station> searchEnabled() {
+
         // Setup the HibernateSearch EntityManager and QueryBuilder for Station entity
         FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
         QueryBuilder builder = fullTextEntityManager.getSearchFactory().buildQueryBuilder().forEntity(Station.class).get();
@@ -73,6 +76,7 @@ public class StationSearchService {
     @Transactional(readOnly = true)
     // Search for supplied term among the stationId or name fields (fuzzy could be configurable)
     public List<Station> searchStationIdOrNameFuzzy(String searchTerm) {
+
         // Setup the HibernateSearch EntityManager and QueryBuilder for Station entity
         FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
         QueryBuilder builder = fullTextEntityManager.getSearchFactory().buildQueryBuilder().forEntity(Station.class).get();
