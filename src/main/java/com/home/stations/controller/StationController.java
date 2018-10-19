@@ -19,37 +19,29 @@ public class StationController {
     @Autowired
     private StationSearchService searchService;
 
-    @Autowired
-    // probably use in a service but convenient for now for CRUD
-    private StationRepository stationRepository;
-
 
     // CRUD mappings
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     Station create(@RequestBody Station station) {
-        return stationRepository.save(station);
+        return searchService.create(station);
     }
 
     @GetMapping("{id}")
     public Station show(@PathVariable long id) {
-        return stationRepository.findOne(id);
+        Station found = searchService.show(id);
+        return found;
     }
 
     @PutMapping("{id}")
     public Station update(@PathVariable long id, @RequestBody Station station) {
-        Station existing = stationRepository.findOne(id);
-        existing.setStationId(station.getStationId());
-        existing.setName(station.getName());
-        existing.setHdEnabled(station.getHdEnabled());
-        existing.setCallSign(station.getCallSign());
-        return stationRepository.save(station);
+        return searchService.update(id, station);
     }
 
     @DeleteMapping("{id}")
     public void delete(@PathVariable long id) {
-        stationRepository.delete(id);
+        searchService.delete(id);
         return;
     }
 
@@ -83,7 +75,7 @@ public class StationController {
                     station.setHdEnabled(true);
                     station.setName(String.format("Station %s", String.valueOf(i)));
                     station.setCallSign(String.format("Call Sign %s", String.valueOf(i)));
-                    stationRepository.save(station);
+                    searchService.create(station);
                     System.out.println(i + " => " + station.getStationId() + " : " + station.getHdEnabled());
                 }
         );

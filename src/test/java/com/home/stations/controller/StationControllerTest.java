@@ -3,6 +3,7 @@ package com.home.stations.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.home.stations.domain.Station;
+import com.home.stations.service.StationSearchService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.Test;
@@ -36,14 +37,14 @@ public class StationControllerTest {
     private MockMvc mvc;
 
     @MockBean
-    StationController controller;
+    StationSearchService service;
 
 
     @Test
     public void show() throws Exception {
 
         Station station = createStation();
-        given(controller.show(station.getId())).willReturn(station);
+        given(service.show(station.getId())).willReturn(station);
 
         mvc.perform(get("/station/"+station.getId())
                 .contentType(APPLICATION_JSON))
@@ -55,7 +56,7 @@ public class StationControllerTest {
     public void create() throws Exception {
 
         Station station = createStation();
-        given(controller.create(station)).willReturn(station);
+        given(service.create(station)).willReturn(station);
 
         MvcResult result =
                 mvc.perform(post("/station")
@@ -72,7 +73,7 @@ public class StationControllerTest {
     public void update() throws Exception {
 
         Station station = createStation();
-        given(controller.update(station.getId(), station)).willReturn(station);
+        given(service.update(station.getId(), station)).willReturn(station);
 
         MvcResult result =
                 mvc.perform(put("/station/"+station.getId())
@@ -87,7 +88,7 @@ public class StationControllerTest {
     @Test
     public void remove() throws Exception {
 
-        doNothing().when(controller).delete(anyLong());
+        doNothing().when(service).delete(anyLong());
 
         mvc.perform(delete("/station/"+anyLong())
                 .contentType(APPLICATION_JSON))
@@ -99,7 +100,7 @@ public class StationControllerTest {
 
         Station station = createStation();
         List<Station> allEnabled = Arrays.asList(station);
-        given(controller.searchEnabled()).willReturn(allEnabled);
+        given(service.searchEnabled()).willReturn(allEnabled);
 
         mvc.perform(get("/station/enabled")
                 .contentType(APPLICATION_JSON))
@@ -114,7 +115,7 @@ public class StationControllerTest {
         String searchTerm = "a%20search%20name";
         Station station = createStation();
         List<Station> allSearchedTerm = Arrays.asList(station);
-        given(controller.searchStationIdOrNameFuzzy(searchTerm)).willReturn(allSearchedTerm);
+        given(service.searchStationIdOrNameFuzzy(searchTerm)).willReturn(allSearchedTerm);
 
         mvc.perform(get("/station/search?term="+searchTerm)
                 .contentType(APPLICATION_JSON))
