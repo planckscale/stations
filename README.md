@@ -1,5 +1,6 @@
 # Stations REST webservice 
 ## Relational persistence, SpringData/Hibernate ORM, and Lucene file system indexed search (HibernationSearch integration).
+### Some experimentation here as a learning experience and other things to consider for scalability like caching, NoSql, or async programming, could be investigated. Could learn and scale with clusters using kubernetes and the docker containers.
 
 ## Some docs on things i needed to research or reference.
 * https://www.baeldung.com/spring-data-repositories
@@ -36,7 +37,7 @@ $ curl -X GET http://localhost:8081/metrics
 ### Swagger2-generated API doc. 
 Default setup be seen by going to http://localhost:8080/v2/api-docs and then pasting into online swagger editor
 Hosting the generated API doc with updated descriptions would be another possibility in real life. Would want to markup controller info with more but swagger2 does a good first pass.
-### Some experimentation here as a learning experience and other things to consider for scalability like caching or async programming could be investigated.
+
 
 ### Docker Container
 #### Please see Dockerfile at project root.
@@ -79,4 +80,120 @@ Successfully tagged stations-0.0.1:latest
 2018-10-21 20:04:50.435  INFO 1 --- [           main] s.d.s.w.s.ApiListingReferenceScanner     : Scanning for api listing references
 2018-10-21 20:04:51.012  INFO 1 --- [           main] s.b.c.e.t.TomcatEmbeddedServletContainer : Tomcat started on port(s): 8080 (http)
 2018-10-21 20:04:51.016  INFO 1 --- [           main] com.home.stations.StationsApplication    : Started StationsApplication in 11.408 seconds (JVM running for 12.326)
+
+`$ docker inspect stations-0.0.1`
+
+> [
+    {
+        "Id": "sha256:03792ef176ce7bccbf5fc8ecb1afe1102447f6ac497819ffc9cdb85a5948c179",
+        "RepoTags": [
+            "stations-0.0.1:latest"
+        ],
+        "RepoDigests": [],
+        "Parent": "sha256:99ec58f507b6100a32ed30ab9733433a439738c5ca9252a7196c169d34785594",
+        "Comment": "",
+        "Created": "2018-10-21T19:59:23.143740645Z",
+        "Container": "22e30f353721098a52388b4e85d6104b87f0d39717d4fd34dd0aa271bef56a9d",
+        "ContainerConfig": {
+            "Hostname": "22e30f353721",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "8080/tcp": {},
+                "8081/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin",
+                "LANG=C.UTF-8",
+                "JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk",
+                "JAVA_VERSION=8u171",
+                "JAVA_ALPINE_VERSION=8.171.11-r0"
+            ],
+            "Cmd": [
+                "/bin/sh",
+                "-c",
+                "#(nop) ",
+                "ENTRYPOINT [\"java\" \"-jar\" \"/stations-0.0.1.jar\"]"
+            ],
+            "ArgsEscaped": true,
+            "Image": "sha256:99ec58f507b6100a32ed30ab9733433a439738c5ca9252a7196c169d34785594",
+            "Volumes": null,
+            "WorkingDir": "",
+            "Entrypoint": [
+                "java",
+                "-jar",
+                "/stations-0.0.1.jar"
+            ],
+            "OnBuild": [],
+            "Labels": {}
+        },
+        "DockerVersion": "18.03.0-ce",
+        "Author": "",
+        "Config": {
+            "Hostname": "",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "8080/tcp": {},
+                "8081/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin",
+                "LANG=C.UTF-8",
+                "JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk",
+                "JAVA_VERSION=8u171",
+                "JAVA_ALPINE_VERSION=8.171.11-r0"
+            ],
+            "Cmd": null,
+            "ArgsEscaped": true,
+            "Image": "sha256:99ec58f507b6100a32ed30ab9733433a439738c5ca9252a7196c169d34785594",
+            "Volumes": null,
+            "WorkingDir": "",
+            "Entrypoint": [
+                "java",
+                "-jar",
+                "/stations-0.0.1.jar"
+            ],
+            "OnBuild": [],
+            "Labels": null
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 145137809,
+        "VirtualSize": 145137809,
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/173d61032095f33873b2bdbdbcc946a793146becc9e5a6e3b8bf6313e9530509/diff:/var/lib/docker/overlay2/35a9b96ea6479199489d7f66bd37d14a84a271ad5031a4bd9628d828f5853088/diff:/var/lib/docker/overlay2/ec5d78e5c3699308967c8110b09864e582440774414c1a55a95f6b02a5219f8f/diff",
+                "MergedDir": "/var/lib/docker/overlay2/37df4c3b258a7db0139d7f01522cd90eeaa400713e395f2896788fa5db2b337c/merged",
+                "UpperDir": "/var/lib/docker/overlay2/37df4c3b258a7db0139d7f01522cd90eeaa400713e395f2896788fa5db2b337c/diff",
+                "WorkDir": "/var/lib/docker/overlay2/37df4c3b258a7db0139d7f01522cd90eeaa400713e395f2896788fa5db2b337c/work"
+            },
+            "Name": "overlay2"
+        },
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:df64d3292fd6194b7865d7326af5255db6d81e9df29f48adde61a918fbd8c332",
+                "sha256:0c317090579594bffe8131ea6302a7439b03e5065714ed27b5e621a167746e78",
+                "sha256:f2ec1bba02a6de48f655b0d040a151e13e1732548ec7b89799f350f9acb1263b",
+                "sha256:7352a55b8e016f7f2bc42434fc126a304f261ede362e5283655156dc946e30b2"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2018-10-21T19:59:23.247635831Z"
+        }
+    }
+]
 
